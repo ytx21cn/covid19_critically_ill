@@ -1,3 +1,6 @@
+# Calling Python code in C++
+# Tutorial: https://www.codeproject.com/Articles/820116/Embedding-Python-program-in-a-C-Cplusplus-code
+
 CXXFLAGS := -g -Wall -Werror
 
 target := evaluation
