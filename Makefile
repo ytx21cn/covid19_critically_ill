@@ -11,6 +11,8 @@ COMPILE_FLAGS = $(CXXFLAGS) $(shell python3-config --cflags) -fPIE
 LD_FLAGS = $(shell python3-config --embed --ldflags)
 
 # Specify CONDA=1 in command line, if compiling in conda virtual environment
+# This needs to install gcc first in the conda environment, by typing:
+# conda install gxx_linux-64
 # WARNING: THIS IS SLOW!!!
 ifeq ($(CONDA),1)
 COMPILE_FLAGS = $(CXXFLAGS) $(shell python3.6-config --cflags)
