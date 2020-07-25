@@ -7,8 +7,15 @@ target := evaluation
 pyhelper := pyhelper
 
 # Linking: and compiling: https://docs.python.org/3/extending/embedding.html#compiling-and-linking-under-unix-like-systems
-COMPILE_FLAGS = $(CXXFLAGS) $(shell pkg-config --cflags --libs python3)
+COMPILE_FLAGS = $(CXXFLAGS) $(shell python3-config --cflags) -fPIE
 LD_FLAGS = $(shell python3-config --embed --ldflags)
+
+# Specify CONDA=1 in command line, if compiling in conda virtual environment
+# WARNING: THIS IS SLOW!!!
+ifeq ($(CONDA),1)
+COMPILE_FLAGS = $(CXXFLAGS) $(shell python3.6-config --cflags)
+LD_FLAGS = $(shell python3.6-config --ldflags)
+endif
 
 .PHONY: all
 all: $(target).out
