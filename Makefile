@@ -6,7 +6,7 @@ CXXFLAGS := -g -Wall -Werror
 target := evaluation
 pyhelper := pyhelper
 
-# Linking: and compiling: https://docs.python.org/3/extending/embedding.html#compiling-and-linking-under-unix-like-systems
+# Linking and compiling: https://docs.python.org/3/extending/embedding.html#compiling-and-linking-under-unix-like-systems
 COMPILE_FLAGS = $(CXXFLAGS) $(shell python3-config --cflags) -fPIE
 LD_FLAGS = $(shell python3-config --embed --ldflags)
 
