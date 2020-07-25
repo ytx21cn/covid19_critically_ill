@@ -6,10 +6,9 @@ CXXFLAGS := -g -Wall -Werror
 target := evaluation
 pyhelper := pyhelper
 
-TARGET_FLAGS = $(CXXFLAGS)
-TARGET_FLAGS += $(shell pkg-config --cflags --libs python3)
-
-LD_FLAGS += $(shell python3-config --embed --ldflags)
+# Linking: and compiling: https://docs.python.org/3/extending/embedding.html#compiling-and-linking-under-unix-like-systems
+COMPILE_FLAGS = $(CXXFLAGS) $(shell pkg-config --cflags --libs python3)
+LD_FLAGS = $(shell python3-config --embed --ldflags)
 
 .PHONY: all
 all: $(target).out
@@ -22,7 +21,7 @@ $(target).out: $(target).o
 	$(CXX) $(CXXFLAGS) -c $<
 
 $(target).o: $(target).cpp
-	$(CXX) $(TARGET_FLAGS) $(LD_FLAGS) -c $<
+	$(CXX) $(COMPILE_FLAGS) $(LD_FLAGS) -c $<
 
 .PHONY: clean
 clean:
