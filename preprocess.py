@@ -121,7 +121,7 @@ def preprocess(
     '''
     # load file and check
     print('Preprocess data')
-    df = pd.read_csv(fname_input)
+    df = pd.read_csv(fname_input, names=['patient_ID', *FEATURE_LIST])
     for var in FEATURE_LIST:
         if var not in df:
             print('DATA ERROR: need variable:',var)
