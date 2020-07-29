@@ -1,9 +1,10 @@
 #include <cstdio>
-#include <string>
+#include <cstdlib>
+#include <cstring>
 #include "pyhelper.hpp"
 
 int main(int argc, char* argv[]) {
-	CPyInstance pyInstance;
+	CPyInstance pyInstance(argc, argv);
 
 	// load prediction.py
 	const char filename[] = "prediction.py";

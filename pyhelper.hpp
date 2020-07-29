@@ -7,8 +7,12 @@
 // Source: https://www.codeproject.com/Articles/820116/Embedding-Python-program-in-a-C-Cplusplus-code
 
 class CPyInstance {
+	private:
+		const int argc;
+		wchar_t** argv = nullptr;
 	public:
-		CPyInstance();
+		CPyInstance(const int& argc);
+		CPyInstance(const int& argc, char** argv);
 		~CPyInstance();
 };
 
