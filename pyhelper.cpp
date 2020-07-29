@@ -5,11 +5,27 @@
 
 // CPyInstance
 
-CPyInstance::CPyInstance() {
+CPyInstance::CPyInstance(const int& argc = 0): argc(argc) {
 	Py_Initialize();
 }
 
+CPyInstance::CPyInstance(const int& argc, char** argv): CPyInstance(argc) {
+	// get wchar_t* array from char* array
+	// and save it internally
+	this->argv = new wchar_t*[argc];
+	for (int i = 0; i < argc; ++i) {
+		this->argv[i] = Py_DecodeLocale(argv[i], nullptr);
+	}
+
+	PySys_SetArgv(argc, this->argv); // do not update sys in Python
+}
+
 CPyInstance::~CPyInstance() {
+	for (int i = 0; i < this->argc; ++i) {
+		PyMem_RawFree(this->argv[i]);
+	}
+	delete[] this->argv;
+
 	Py_Finalize();
 }
 
