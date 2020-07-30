@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
 	const vec_of_strs prediction_args = {processed_filename, prediction_filename};
 
 	const vec_of_strs modules = {"preprocess", "prediction"};
-	const vec_of_strs funcs = {"preprocess", "predict_batch_nfold"}
+	const vec_of_strs funcs = {"preprocess", "predict_batch_nfold"};
 	const std::vector<vec_of_strs> args = {preprocess_args, prediction_args};
 
 	// This part is written based on https://docs.python.org/3/extending/embedding.html#pure-embedding
@@ -37,7 +37,7 @@ int main(int argc, char* argv[]) {
 		/*, *pFunc, *pArgs, *pValue*/;
 
 		// check pName
-		const char* script_name = modules.at(i).c_str();
+		const char *script_name = modules.at(i).c_str();
 		PyObject *pName = PyUnicode_DecodeFSDefault(script_name);
 		if (!pName) {
 			fprintf(stderr, "ERROR: pName for %s is invalid\n", script_name);
@@ -54,9 +54,41 @@ int main(int argc, char* argv[]) {
 		}
 
 		// now pModule check is OK
-		// TODO: get function to run from module
+		// get function to run
+		const char* func_name = funcs.at(i).c_str();
+		PyObject *pFunc = PyObject_GetAttrString(pModule, func_name);
+		if ((!pFunc) || (!PyCallable_Check(pFunc))) {
+			if (PyErr_Occurred()) {
+				PyErr_Print();
+			}
+			fprintf(stderr, "Cannot find function \"%s\"\n", func_name);
+			continue;
+		}
 
+		// now pFunc check is OK
+		// get arguments into place
+		unsigned int num_args = args.at(i).size();
+		PyObject *pArgs = PyTuple_New(num_args);
+		PyObject *pValue = nullptr;
+		for (unsigned int j = 0; j < num_args; ++j) {
+			const char *arg_str = args.at(i).at(j).c_str();
+			pValue = PyUnicode_FromString(arg_str);
+			if (!pValue) {
+				Py_DECREF(pArgs);
+				Py_DECREF(pModule);
+				fprintf(stderr, "Cannot convert argument %s\n", arg_str);
+				return 1;
+			}
+			// pValue reference stolen here:
+			PyTuple_SetItem(pArgs, j, pValue);
+		}
 
+		// now we can call the function with arguments
+		PyObject_CallObject(pFunc, pArgs);
+		Py_XDECREF(pArgs);
+		Py_XDECREF(pValue);
+		Py_XDECREF(pFunc);
+		Py_DECREF(pModule);
 	}
 
 	return 0;
