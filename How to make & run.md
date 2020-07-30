@@ -1,5 +1,8 @@
 # How to make & run
 
+## My OS environment
+* Ubuntu 20.04 LTS
+
 ## Setup conda environment
 1. [Install miniconda](https://docs.anaconda.com/anaconda/install/).
 2. [Create](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-with-commands) conda virtual environment.
