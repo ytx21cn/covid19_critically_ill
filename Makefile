@@ -17,7 +17,7 @@ LD_FLAGS = $(shell $(PY3CONFIG) --embed --ldflags)
 
 # Specify CONDA=1 in command line, if compiling in conda virtual environment (IF YOU DON'T HAVE IT, COMPILATION WILL FAIL!!!)
 # This needs to install gcc first in the conda environment, by typing:
-# conda install gxx_linux-64
+# conda install -y gxx_linux-64
 # WARNING: THIS IS SLOW!!!
 ifeq ($(CONDA),1)
 COMPILE_FLAGS = $(CXXFLAGS) $(shell $(CONDA_PY3CONFIG) --cflags)
