@@ -33,19 +33,20 @@ int main(int argc, char* argv[]) {
 
 	// This part is written based on https://docs.python.org/3/extending/embedding.html#pure-embedding
 
-	for (unsigned int i = 0; i < modules.size(); ++i) {
-		/*, *pFunc, *pArgs, *pValue*/;
+	PyObject *pName = nullptr, *pModule = nullptr, *pFunc = nullptr;
+	PyObject *pArgs = nullptr, *pValue = nullptr;
 
+	for (unsigned int i = 0; i < modules.size(); ++i) {
 		// check pName
 		const char *script_name = modules.at(i).c_str();
-		PyObject *pName = PyUnicode_DecodeFSDefault(script_name);
+		pName = PyUnicode_DecodeFSDefault(script_name);
 		if (!pName) {
 			fprintf(stderr, "ERROR: pName for %s is invalid\n", script_name);
 			return -1;
 		}
 
 		// check pModule
-		PyObject *pModule = PyImport_Import(pName);
+		pModule = PyImport_Import(pName);
 		Py_DECREF(pName);
 		if (!pModule) {
 			PyErr_Print();
@@ -56,7 +57,7 @@ int main(int argc, char* argv[]) {
 		// now pModule check is OK
 		// get function to run
 		const char* func_name = funcs.at(i).c_str();
-		PyObject *pFunc = PyObject_GetAttrString(pModule, func_name);
+		pFunc = PyObject_GetAttrString(pModule, func_name);
 		if ((!pFunc) || (!PyCallable_Check(pFunc))) {
 			if (PyErr_Occurred()) {
 				PyErr_Print();
@@ -68,8 +69,8 @@ int main(int argc, char* argv[]) {
 		// now pFunc check is OK
 		// get arguments into place
 		unsigned int num_args = args.at(i).size();
-		PyObject *pArgs = PyTuple_New(num_args);
-		PyObject *pValue = nullptr;
+		pArgs = PyTuple_New(num_args);
+		pValue = nullptr;
 		for (unsigned int j = 0; j < num_args; ++j) {
 			const char *arg_str = args.at(i).at(j).c_str();
 			pValue = PyUnicode_FromString(arg_str);
@@ -85,11 +86,12 @@ int main(int argc, char* argv[]) {
 
 		// now we can call the function with arguments
 		PyObject_CallObject(pFunc, pArgs);
-		Py_XDECREF(pArgs);
-		Py_XDECREF(pValue);
-		Py_XDECREF(pFunc);
-		Py_DECREF(pModule);
 	}
+
+	Py_XDECREF(pValue);
+	Py_XDECREF(pArgs);
+	Py_XDECREF(pFunc);
+	Py_XDECREF(pModule);
 
 	return 0;
 }
