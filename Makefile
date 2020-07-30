@@ -8,7 +8,7 @@ CONDA_PY3CONFIG := python3.6-config
 
 CLEAN := -rm -rfv *.o *.out *.gch
 
-target := prediction
+target := preprocess-prediction
 pyhelper := pyhelper
 
 # Linking and compiling: https://docs.python.org/3/extending/embedding.html#compiling-and-linking-under-unix-like-systems
