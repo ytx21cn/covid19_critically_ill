@@ -29,10 +29,10 @@ all: $(target).out
 
 # For this part, I consulted: https://stackoverflow.com/questions/27672572/embedding-python-in-c-linking-fails-with-undefined-reference-to-py-initialize
 $(target).out: $(target).o $(pyhelper).o
-	$(CXX) $(CXXFLAGS) $^ $(LD_FLAGS) -o $@
+	$(CXX) $^ $(LD_FLAGS) -o $@
 
 %.o: %.cpp
-	$(CXX) $(CXXFLAGS) $(COMPILE_FLAGS) $(LD_FLAGS) -c $<
+	$(CXX) $(COMPILE_FLAGS) $(LD_FLAGS) -c $<
 
 # Clean up
 
